@@ -16,6 +16,10 @@ logging.basicConfig(
 logging.info('Server started')
 STR_APP = 'open-horizon'
 STR_VERSION = '1'
+PAGE_404_ERROR = 'Ya ain\'t allowed to be here'
+PAGE_LOG_STR = '''ATTENTIONThis computer system has been seized
+by the United States Secret Service in the interests of
+National Security. Your IP has been logged.'''
 
 
 def load():
@@ -35,7 +39,6 @@ def save():
                 f.write('{}\n'.format(ip))
     except Exception:
         logging.error('iplist write error')
-
 
 load()
 
@@ -70,7 +73,7 @@ def clear_old_records():
 
 @error(404)
 def error_404(error):
-    return 'Ya ain\'t allowed to be here'
+    return PAGE_404_ERROR
 
 
 @route('/get', method='GET')
@@ -88,8 +91,6 @@ def log_client_ip():
     addr = request.headers.get('X-Real-IP')
     IP_LIST[addr] = datetime.utcnow()
     logging.info('ip logged:{}'.format(addr))
-    return '''ATTENTIONThis computer system has been seized
-    by the United States Secret Service in the interests of
-    National Security. Your IP has been logged.'''
+    return PAGE_LOG_STR
 
 application = default_app()
